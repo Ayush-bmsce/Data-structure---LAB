@@ -81,3 +81,37 @@ void main()
             printf("Invalid Choice! please try again \n");
     }
 }
+Output:
+Queue Menu
+1.Insert(Enqueue):
+2.Delete(Deque):
+3.Display Queue
+4.EXIT 
+Enter the number choice :
+1
+Enter the value to insert
+4
+Element 4 Inserted
+
+
+
+Queue Menu
+1.Insert(Enqueue):
+2.Delete(Deque):
+3.Display Queue
+4.EXIT 
+Enter the number choice :
+2
+4
+
+
+
+1.Insert(Enqueue):
+2.Delete(Deque):
+3.Display Queue
+4.EXIT 
+Enter the number choice :
+3
+
+Queue Elements
+1   2  3  4

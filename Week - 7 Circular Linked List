@@ -1,0 +1,166 @@
+Ayush Aditya
+1BM23CS057
+
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node* next;
+};
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+void insertAtEnd(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    
+    if (*head == NULL) {
+        newNode->next = newNode; // Point to itself if the list is empty
+        *head = newNode;
+    } else {
+        struct Node* temp = *head;
+        // Traverse to the last node (which points back to head)
+        while (temp->next != *head) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+        newNode->next = *head; // Make it circular
+    }
+}
+void insertAtBeginning(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    if (*head == NULL) {
+        newNode->next = newNode; // Point to itself if the list is empty
+        *head = newNode;
+    } else {
+        struct Node* temp = *head;
+        // Traverse to the last node
+        while (temp->next != *head) {
+            temp = temp->next;
+        }
+        // Now the last node points to the new node
+        temp->next = newNode;
+        newNode->next = *head;
+        *head = newNode; // Update head to the new node
+    }
+}
+void insertAtPosition(struct Node** head, int data, int position) {
+    struct Node* newNode = createNode(data);
+    if (position == 1) {
+        insertAtBeginning(head, data);
+        return;
+    }
+    struct Node* temp = *head;
+    int count = 1;
+    while (temp != NULL && count < position - 1) {
+        temp = temp->next;
+        count++;
+        if (temp == *head) break; // Stop if we reach the head again (circular list)
+    }
+    if (temp == NULL || temp->next == *head) {
+        // If the position is greater than the length, insert at the end
+        insertAtEnd(head, data);
+    } else {
+        newNode->next = temp->next;
+        temp->next = newNode;
+    }
+}
+void deleteFirst(struct Node**head){
+  if(head == NULL){
+    printf("LL is Empty");
+}
+if(head->next == head){
+  free(head);
+  head = NULL:
+  return;
+}
+struct Node* temp = head;
+while(temp->next != start){
+  temp = temp->head;
+  temp = head;
+}
+temp->next = head->next;
+free(head);
+head = temp->next;
+}
+void deleteLast(struct Node*head){
+  if(head == NULL){
+    printf("LL is emopty");
+    return;
+  }
+  if(head->next == head){
+    free(head);
+    head = NULL;
+    return;
+  }
+  struct Node* temp = head;
+  while(temp->next->next != start){
+    temp = temp->next;
+  }
+  free(temp->next);
+  temp->next = start;
+}
+void deleteSpecific(struct Node* head, int ele){
+  if(head == NULL){
+    prinntf("Linked List is Empty");
+    return;
+  }
+  printf("Enter element");
+  scanf("%d", ele);
+  if(head->date == ele && head->next == start){
+    free(head);
+    head = NULL;
+    return;
+  }
+  if(start->data == ele{
+    struct *Node temp = start;
+    while(temp->next != start){
+      temp = temp->next;
+    }
+    temp->next = head->next;
+    free(head);
+    head = temp->head;
+    return;
+  }
+  struct Node*temp = start;
+  struct Node*prev = NULL:
+  while(temp->data != ele && temp->link != start){
+    prev = temp;
+    temp = temp->next;
+  }
+  prev->next = temp->next;
+  free(temp);
+  return;
+}
+void display(struct Node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    } while (temp != head);
+    printf("(head)\n");
+}
+int main() {
+    struct Node* head = NULL;
+    insertAtEnd(&head, 10);
+    insertAtEnd(&head, 20);
+    insertAtEnd(&head, 30);
+    printf("List after inserting at the end:\n");
+    display(head);
+    insertAtBeginning(&head, 5);
+    printf("List after inserting at the beginning:\n");
+    display(head);
+    insertAtPosition(&head, 15, 3);
+    printf("List after inserting at position 3:\n");
+    display(head);
+    insertAtPosition(&head, 25, 100);
+    printf("List after inserting at position 100 (out of bounds):\n");
+    display(head);
+    return 0;
+}

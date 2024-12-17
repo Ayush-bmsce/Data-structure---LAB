@@ -27,14 +27,16 @@ bool isConnected(int graph[][5], int n) {
     return true;
 }
 int main() {
-    int n = 5; 
-    int graph[5][5] = {
-        {0, 1, 1, 0, 0},
-        {1, 0, 1, 1, 0},
-        {1, 1, 0, 0, 0},
-        {0, 1, 0, 0, 1},
-        {0, 0, 0, 1, 0}
-    };
+    int n;
+    printf("Enter the value for n \n");
+    scanf("%d", &n);
+    int graph[n][n];
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            printf("Enter value for graph element\n");
+            scanf("\n%d", &graph[i][j]);
+        }
+    }
     if (isConnected(graph, n)) {
         printf("The graph is connected.\n");
     } else {

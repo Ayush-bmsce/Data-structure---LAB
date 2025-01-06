@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+// Stack structure to be used in DFS
+struct Stack {
+    int *arr;
+    int top;
+    int capacity;
+};
+
+struct Stack* createStack(int capacity) {
+    struct Stack *stack = (struct Stack*)malloc(sizeof(struct Stack));
+    stack->capacity = capacity;
+    stack->top = -1;
+    stack->arr = (int*)malloc(capacity * sizeof(int));
+    return stack;
+}
+
+bool isStackEmpty(struct Stack *stack) {
+    return stack->top == -1;
+}
+
+void push(struct Stack *stack, int value) {
+    if (stack->top == stack->capacity - 1) {
+        printf("Stack overflow\n");
+        return;
+    }
+    stack->arr[++stack->top] = value;
+}
+
+int pop(struct Stack *stack) {
+    if (isStackEmpty(stack)) {
+        printf("Stack underflow\n");
+        return -1;
+    }
+    return stack->arr[stack->top--];
+}
+
+void dfs(int graph[][5], int start, int n) {
+    bool visited[n];
+    for (int i = 0; i < n; i++) {
+        visited[i] = false;
+    }
+    
+    struct Stack *stack = createStack(n);
+    
+    push(stack, start);
+    visited[start] = true;
+    
+    printf("DFS Traversal: ");
+    
+    while (!isStackEmpty(stack)) {
+        int node = pop(stack);
+        printf("%d ", node);
+        
+        // Explore all adjacent nodes
+        for (int i = 0; i < n; i++) {
+            // If there's an edge and the node is not visited
+            if (graph[node][i] == 1 && !visited[i]) {
+                visited[i] = true;
+                push(stack, i);
+            }
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    int n;
+    printf("Enter the value for n (number of nodes in the graph): \n");
+    scanf("%d", &n);
+
+    int graph[n][n];
+    printf("Enter the adjacency matrix (1 for edge, 0 for no edge):\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("Enter value for graph[%d][%d]: ", i, j);
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    dfs(graph, 0, n); // Call DFS starting from node 0
+    return 0;
+}

@@ -1,96 +1,102 @@
-#include<stdio.h>
-#include<conio.h>
-#include<string.h>
+#include <stdio.h>
+#include <string.h>
+
 int index = 0, pos = 0, top = -1, length;
-char symbol, temp, infix[20],postfix[20],stack[20];
+char symbol, temp, infix[20], postfix[20], stack[20];
+
 void infixtopostfix();
 void push(char symbol);
 char pop();
 int pred(char symbol);
-void main()
-{
-clrsrc();
-printf("Enter infix expression : \n ");
-scanf("%s", infix);
-infixtopostfix();
-printf("\n Infix expression \n %s", infix);
-printf("\n Postfix expression :\n %s", postfix);
-getch();
+
+int main() {
+    printf("Enter infix expression: ");
+    scanf("%s", infix);
+    
+    infixtopostfix();
+    
+    printf("\nInfix expression: %s", infix);
+    printf("\nPostfix expression: %s\n", postfix);
+    
+    return 0;
 }
-void infixtopostfix()
-{
+
+void infixtopostfix() {
     length = strlen(infix);
-    push('#');
-    while(index < length){
+    push('#');  // Pushing the end-of-expression symbol onto the stack
+    
+    while (index < length) {
         symbol = infix[index];
-        switch(symbol);
-    {
-    case"(":
-            push(symbol);
-            break;
-    case ")":
-            temp = pop();
-            while(temp != ")" ){
-                postfix[pos] = temp;
-            pos++;
-            temp = pop();
-            }
-            break;
-            case'+':
-            case'-':
-            case'*':
-            case'/':
-            case'^':
-                while(pred(stack[top]) >= pred(symbol)){
+        
+        switch (symbol) {
+            case '(':
+                push(symbol);
+                break;
+                
+            case ')':
+                temp = pop();
+                while (temp != '(') {
+                    postfix[pos++] = temp;
                     temp = pop();
-                    prefix[pos++] = temp;
+                }
+                break;
+                
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '^':
+                while (pred(stack[top]) >= pred(symbol)) {
+                    temp = pop();
+                    postfix[pos++] = temp;
                 }
                 push(symbol);
                 break;
-            default:postfix[pos++] = symbol;
-            }
-    index++;
-    while(top > 0){
+                
+            default:  // Operand (operand here means non-operator)
+                postfix[pos++] = symbol;
+        }
+        index++;
+    }
+
+    // Pop all remaining operators from the stack
+    while (top >= 0) {
         temp = pop();
         postfix[pos++] = temp;
-        }
     }
 }
-void push(char symbol){
-    top = top+1;
+
+void push(char symbol) {
+    top = top + 1;
     stack[top] = symbol;
 }
-char pop()
-{
-    char symbol;
-    symbol = stack[top];
-    top = top-1;
-    return synbol;
+
+char pop() {
+    char symbol = stack[top];
+    top = top - 1;
+    return symbol;
 }
-int pred(char symbol){
+
+int pred(char symbol) {
     int p;
-    switch(symbol){
-        case'^':
-                p = 3;
-                break;
+    switch (symbol) {
+        case '^':  // Exponent operator has the highest precedence
+            p = 3;
+            break;
         case '*':
-        case '/':
-                p = 2;
-                break;
-        case'+':
-        case'-':
-                p = 1;
-                break;
-        case '(':
-                p = 0;
-                break;
-        case'#':
-                p = -1;
-                break;
-        }
-        return(p);
+        case '/':  // Multiplication and division have the same precedence
+            p = 2;
+            break;
+        case '+':
+        case '-':  // Addition and subtraction have the lowest precedence
+            p = 1;
+            break;
+        case '(':  // Opening parenthesis has the lowest precedence
+            p = 0;
+            break;
+        case '#':  // End-of-expression symbol has the lowest precedence
+            p = -1;
+            break;
     }
-
-
-}
+    return p;
 }

@@ -1,0 +1,93 @@
+1.A*
+
+import heapq
+
+# Manhattan distance heuristic
+def manhattan_distance(state, goal):
+    distance = 0
+    for i in range(3):
+        for j in range(3):
+            if state[i][j] != 0:
+                x, y = divmod(goal.index(state[i][j]), 3)
+                distance += abs(x - i) + abs(y - j)
+    return distance
+
+
+def a_star(start, goal):
+    goal_flat = [num for row in goal for num in row]
+    start_flat = [num for row in start for num in row]
+
+    frontier = []
+    heapq.heappush(frontier, (0, start_flat, 0, []))
+    explored = set()
+
+    moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
+
+    while frontier:
+        _, state, g, path = heapq.heappop(frontier)
+        if state == goal_flat:
+            return path
+
+        explored.add(tuple(state))
+        zero_index = state.index(0)
+        x, y = divmod(zero_index, 3)
+
+        for dx, dy in moves:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < 3 and 0 <= ny < 3:
+                new_state = state[:]
+                swap_index = nx * 3 + ny
+                new_state[zero_index], new_state[swap_index] = new_state[swap_index], new_state[zero_index]
+
+                if tuple(new_state) not in explored:
+                    h = manhattan_distance(
+                        [[new_state[i*3 + j] for j in range(3)] for i in range(3)],
+                        goal
+                    )
+                    f = g + 1 + h
+                    heapq.heappush(frontier, (f, new_state, g + 1, path + [new_state]))
+
+    return None
+
+
+# Example usage
+start = [[1, 2, 3],
+         [4, 0, 6],
+         [7, 5, 8]]
+
+goal = [[1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 0]]
+
+solution = a_star(start, goal)
+print("Steps to goal:")
+for step in solution:
+    print(step[:3], step[3:6], step[6:])
+
+
+
+2.Hill climbing 
+
+import random
+
+def hill_climb(func, x_start, step_size=0.1, max_iter=1000):
+    x = x_start
+    for _ in range(max_iter):
+        # Generate a neighbor
+        neighbors = [x + step_size, x - step_size]
+        next_x = max(neighbors, key=func)
+
+        if func(next_x) <= func(x):
+            # No improvement, stop
+            break
+        x = next_x
+    return x, func(x)
+
+
+# Example function: f(x) = -x^2 + 10x
+def f(x):
+    return -x**2 + 10*x
+
+best_x, best_val = hill_climb(f, x_start=random.uniform(0, 10))
+print("Best solution:", best_x)
+print("Best value:", best_val)
